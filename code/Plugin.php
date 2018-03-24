@@ -15,7 +15,8 @@ class Plugin {
         'domain' => 'clientstage-api.democracyengine.com',
         'username' => 'username',
         'password' => 'password',
-        'account_id' => -1
+        'account_id' => -1,
+        'recipient_id' => 'recipient'
     );
 
     protected $option_name;
@@ -33,10 +34,17 @@ class Plugin {
         add_action('wp_ajax_democracy_engine_donation_form', array($this, 'donation_form_ajax'));
 
         //setup plugin scripts
-        wp_register_style(self::ID, plugins_url('assets/app.css',__FILE__ ));
-        wp_register_script(self::ID, plugins_url('assets/app.js',__FILE__ ));
+        wp_register_style(self::ID, plugins_url('../assets/app.css',__FILE__ ));
+        wp_register_script(self::ID, plugins_url('../assets/app.js',__FILE__ ));
         wp_enqueue_style(self::ID);
         wp_enqueue_script(self::ID);
+        wp_localize_script(
+            self::ID,
+            'democracy_engine_plugin',
+            array(
+                'ajax_url' => admin_url('admin-ajax.php')
+            )
+        );
 
         if (is_admin()) {
             $admin = new \DEWordpressPlugin\Admin();
@@ -83,7 +91,7 @@ class Plugin {
     }
 
     public function render_donation_form() {
-        echo $this->templates->render('donationForm', [
+        echo $this->templates->render('components/donationForm', [
             'donation_amounts' => array(    //TODO: Make this a plugin setting
                 5,
                 15,
@@ -95,16 +103,17 @@ class Plugin {
             ),
             'countries' => \DEWordpressPlugin\Constants::COUNTRIES,
             'us_states' => \DEWordpressPlugin\Constants::US_STATES,
-            'years' => range(date('Y'), date('Y') + 12),
-            'months'  => \DEWordpressPlugin\Constants::MONTHS
+            'months'  => \DEWordpressPlugin\Constants::MONTHS,
+            'years' => range(date('Y'), date('Y') + 12) //current year until 12 years from now
         ]);
     }
 
     public function donation_form_ajax() {
-        global $wpdb; // this is how you get access to the database
+        $data = $this->client->createDonation();
 
         wp_send_json_success(array(
-            "stuff" => array()
+            "response" => $data,
+            "request" => array()
         ));
     }
 }

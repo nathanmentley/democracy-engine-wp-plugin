@@ -24,41 +24,13 @@ class Admin extends \DEWordpressPlugin\Plugin {
     }
 
     public function activate() {
-        global $wpdb;
-
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-
-        $sql = "CREATE TABLE `$this->table_results` (
-                login_id BIGINT(20) NOT NULL AUTO_INCREMENT,
-                user_login VARCHAR(60) NOT NULL DEFAULT '',
-                date_login TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY  (login_id),
-                KEY user_login (user_login(5))
-                )";
-
-        dbDelta($sql);
-        if ($wpdb->last_error) {
-            die($wpdb->last_error);
-        }
 
         update_option($this->option_name, $this->options);
     }
 
     public function deactivate() {
         global $wpdb;
-
-        $prior_error_setting = $wpdb->show_errors;
-        $wpdb->show_errors = false;
-        $denied = 'command denied to user';
-
-        $wpdb->query("DROP TABLE `$this->table_results`");
-        if ($wpdb->last_error) {
-            if (strpos($wpdb->last_error, $denied) === false) {
-                die($wpdb->last_error);
-            }
-        }
-
-        $wpdb->show_errors = $prior_error_setting;
 
         $package_id = self::ID;
         $wpdb->escape_by_ref($package_id);
@@ -93,7 +65,7 @@ class Admin extends \DEWordpressPlugin\Plugin {
                 'text' => __("Democracy Engine Username", self::ID),
                 'type' => 'string',
             ),
-            'password' => array(
+            'password' => array(//TODO: Make a password field type.
                 'section' => 'login',
                 'label' => __("Password", self::ID),
                 'text' => __("Democracy Engine Password", self::ID),
@@ -104,6 +76,12 @@ class Admin extends \DEWordpressPlugin\Plugin {
                 'label' => __("Account ID", self::ID),
                 'text' => __("Democracy Engine Account ID", self::ID),
                 'type' => 'int',
+            ),
+            'recipient_id' => array(//TODO: Make this a select list 
+                'section' => 'login',
+                'label' => __("Recipient ID", self::ID),
+                'text' => __("Democracy Engine Target Recipient ID", self::ID),
+                'type' => 'string',
             ),
             'deactivate_deletes_data' => array(
                 'section' => 'login',

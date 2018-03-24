@@ -1,4 +1,4 @@
-<div class="progress-stages">
+<div class="democracy-engine-wp-plugin-donation-form-root">
     <div class="progress-stage stage-1" data-stageid="1">
         <div class="radio-inline">
             <?php foreach($donation_amounts as $amount): ?>

@@ -24,7 +24,7 @@ class ComposerStaticInit90c434baa7b8d3328a1fe1dd2854a6d5
         ),
         'DEWordpressPlugin\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src/php',
+            0 => __DIR__ . '/../..' . '/code',
         ),
     );
 

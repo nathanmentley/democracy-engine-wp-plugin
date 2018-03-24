@@ -7,5 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'League\\Plates\\' => array($vendorDir . '/league/plates/src'),
-    'DEWordpressPlugin\\' => array($baseDir . '/src/php'),
+    'DEWordpressPlugin\\' => array($baseDir . '/code'),
 );

@@ -12,7 +12,7 @@ class BaseApiClient {
     public function __destruct() {}
 
     protected function get($url, $obj = array()) {
-        return RestCurl::exec(self::GET, $url, $obj);
+        return $this->exec(self::GET, $url, $obj);
     }
 
     protected function post($url, $obj = array()) {
@@ -28,7 +28,7 @@ class BaseApiClient {
     }
 
     protected function setupAuth($curl) {
-        return $curl;
+        $curl;
     }
 
     private function exec($method, $url, $obj = array()) {
@@ -58,7 +58,7 @@ class BaseApiClient {
         curl_setopt($curl, CURLOPT_HEADER, TRUE);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, TRUE);
 
-        $curl = $this->setupAuth($curl);
+        $this->setupAuth($curl);
 
         // Exec
         $response = curl_exec($curl);
