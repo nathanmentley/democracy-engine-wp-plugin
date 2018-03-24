@@ -1,0 +1,23 @@
+{
+    "name": "democracy_engine/plugin",
+    "description": "A simple wordpress plugin to accept donations through democracy engine",
+    "keywords": ["wordpress", "plugin", "democracy engine"],
+    "homepage": "https://github.com/nathanmentley/democracy-engine-wp-plugin",
+    "license": "bsd-2-clause",
+    "authors": [
+        {
+            "name": "Nathan Mentley",
+            "email": "nathanmentley@gmail.com",
+            "homepage": "https://github.com/nathanmentley"
+        }
+    ],
+    "type": "wordpress-plugin",
+    "require": {
+        "php": ">=5.6.34",
+        "composer/installers": "v1.0.6",
+        "league/plates": "3.*"
+    },
+    "autoload": {
+        "psr-4": {"DEWordpressPlugin\\": "src/php/"}
+    }
+}

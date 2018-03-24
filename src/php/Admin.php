@@ -1,6 +1,8 @@
 <?php
 
-class democracy_engine_admin extends democracy_engine {
+namespace DEWordpressPlugin;
+
+class Admin extends \DEWordpressPlugin\Plugin {
     protected $capability_required;
     protected $fields;
     protected $form_action;
@@ -71,7 +73,7 @@ class democracy_engine_admin extends democracy_engine {
     protected function set_sections() {
         $this->sections = array(
             'login' => array(
-                'title' => __("Democracy Engine Login Info", 'democracy-engine'),
+                'title' => __("Democracy Engine Login Info", self::ID),
                 'callback' => 'section_login',
             )
         );
@@ -81,38 +83,47 @@ class democracy_engine_admin extends democracy_engine {
         $this->fields = array(
             'domain' => array(
                 'section' => 'login',
-                'label' => __("Domain", 'democracy-engine'),
-                'text' => __("Democracy Engine Domain Name", 'democracy-engine'),
+                'label' => __("Domain", self::ID),
+                'text' => __("Democracy Engine Domain Name", self::ID),
                 'type' => 'string',
             ),
             'username' => array(
                 'section' => 'login',
-                'label' => __("Username", 'democracy-engine'),
-                'text' => __("Democracy Engine Username", 'democracy-engine'),
+                'label' => __("Username", self::ID),
+                'text' => __("Democracy Engine Username", self::ID),
                 'type' => 'string',
             ),
             'password' => array(
                 'section' => 'login',
-                'label' => __("Password", 'democracy-engine'),
-                'text' => __("Democracy Engine Password", 'democracy-engine'),
+                'label' => __("Password", self::ID),
+                'text' => __("Democracy Engine Password", self::ID),
                 'type' => 'string',
+            ),
+            'account_id' => array(
+                'section' => 'login',
+                'label' => __("Account ID", self::ID),
+                'text' => __("Democracy Engine Account ID", self::ID),
+                'type' => 'int',
             ),
             'deactivate_deletes_data' => array(
                 'section' => 'login',
-                'label' => __("Deactivation", 'democracy-engine'),
-                'text' => __("Should deactivating the plugin remove all of the plugin's data and settings?", 'democracy-engine'),
+                'label' => __("Deactivation", self::ID),
+                'text' => __("Should deactivating the plugin remove all of the plugin data and settings?", self::ID),
                 'type' => 'bool',
-                'bool0' => __("No, preserve the data for future use.", 'democracy-engine'),
-                'bool1' => __("Yes, delete the data.", 'democracy-engine'),
+                'bool0' => __("No, preserve the data for future use.", self::ID),
+                'bool1' => __("Yes, delete the data.", self::ID),
             )
         );
     }
 
     public function plugin_action_links($links) {
         // Translation already in WP.
-        $links[] = '<a href="' . $this->hsc_utf8($this->page_options)
-                . '?page=' . self::ID . '">'
-                . $this->hsc_utf8(__('Settings')) . '</a>';
+        $links[] = $this->templates->render('admin/pluginActionLink', [
+            'page' => $this->hsc_utf8($this->page_options),
+            'id' => self::ID,
+            'title' => $this->hsc_utf8(__('Settings'))
+        ]); 
+        
         return $links;
     }
 
@@ -157,18 +168,18 @@ class democracy_engine_admin extends democracy_engine {
     }
 
     public function page_settings() {
-        echo '<h2>' . $this->hsc_utf8($this->text_settings) . '</h2>';
-        echo '<form action="' . $this->hsc_utf8($this->form_action) . '" method="post">' . "\n";
-        settings_fields($this->option_name);
-        do_settings_sections(self::ID);
-        submit_button();
-        echo '</form>';
+        echo $this->templates->render('admin/settingsForm', [
+            'title' => $this->hsc_utf8($this->text_settings),
+            'action' => $this->hsc_utf8($this->form_action),
+            'option_name' => $this->option_name,
+            'id' => self::ID
+        ]);
     }
 
     public function section_login() {
-        echo '<p>';
-        echo $this->hsc_utf8(__("Democracy Engine API Login Info", 'democracy-engine'));
-        echo '</p>';
+        echo $this->templates->render('admin/sectionHeader', [
+            'title' => $this->hsc_utf8(__("Democracy Engine API Login Info", self::ID))
+        ]);
     }
 
     public function __call($name, $params) {
@@ -189,39 +200,34 @@ class democracy_engine_admin extends democracy_engine {
     }
 
     protected function input_radio($name) {
-        echo $this->hsc_utf8($this->fields[$name]['text']) . '<br/>';
-        echo '<input type="radio" value="0" name="'
-            . $this->hsc_utf8($this->option_name)
-            . '[' . $this->hsc_utf8($name) . ']"'
-            . ($this->options[$name] ? '' : ' checked="checked"') . ' /> ';
-        echo $this->hsc_utf8($this->fields[$name]['bool0']);
-        echo '<br/>';
-        echo '<input type="radio" value="1" name="'
-            . $this->hsc_utf8($this->option_name)
-            . '[' . $this->hsc_utf8($name) . ']"'
-            . ($this->options[$name] ? ' checked="checked"' : '') . ' /> ';
-        echo $this->hsc_utf8($this->fields[$name]['bool1']);
+        echo $this->templates->render('admin/inputRadio', [
+            'option_name' => $this->hsc_utf8($this->option_name),
+            'name' => $this->hsc_utf8($name),
+            'value' => $this->hsc_utf8($this->options[$name]),
+            'title' => $this->hsc_utf8($this->fields[$name]['text']),
+            'false_title' => $this->hsc_utf8($this->fields[$name]['bool0']),
+            'true_title' => $this->hsc_utf8($this->fields[$name]['bool1'])
+        ]);
     }
 
     protected function input_int($name) {
-        echo '<input type="text" size="3" name="'
-            . $this->hsc_utf8($this->option_name)
-            . '[' . $this->hsc_utf8($name) . ']"'
-            . ' value="' . $this->hsc_utf8($this->options[$name]) . '" /> ';
-        echo $this->hsc_utf8($this->fields[$name]['text']
-                . ' ' . __('Default:', 'democracy-engine') . ' '
-                . $this->options_default[$name] . '.');
+        echo $this->templates->render('admin/inputInt', [
+            'option_name' => $this->hsc_utf8($this->option_name),
+            'name' => $this->hsc_utf8($name),
+            'value' => $this->hsc_utf8($this->options[$name]),
+            'default' => $this->options_default[$name],
+            'title' => $this->hsc_utf8($this->fields[$name]['text'])
+        ]);
     }
 
     protected function input_string($name) {
-        echo '<input type="text" size="75" name="'
-            . $this->hsc_utf8($this->option_name)
-            . '[' . $this->hsc_utf8($name) . ']"'
-            . ' value="' . $this->hsc_utf8($this->options[$name]) . '" /> ';
-        echo '<br />';
-        echo $this->hsc_utf8($this->fields[$name]['text']
-                . ' ' . __('Default:', 'democracy-engine') . ' '
-                . $this->options_default[$name] . '.');
+        echo $this->templates->render('admin/inputString', [
+            'option_name' => $this->hsc_utf8($this->option_name),
+            'name' => $this->hsc_utf8($name),
+            'value' => $this->hsc_utf8($this->options[$name]),
+            'default' => $this->options_default[$name],
+            'title' => $this->hsc_utf8($this->fields[$name]['text'])
+        ]);
     }
 
     public function validate($in) {
@@ -234,8 +240,8 @@ class democracy_engine_admin extends democracy_engine {
             return $out;
         }
 
-        $gt_format = __("must be >= '%s',", 'democracy-engine');
-        $default = __("so we used the default value instead.", 'democracy-engine');
+        $gt_format = __("must be >= '%s',", self::ID);
+        $default = __("so we used the default value instead.", self::ID);
 
         // Dynamically validate each field using the info in $fields.
         foreach ($this->fields as $name => $field) {
@@ -268,7 +274,7 @@ class democracy_engine_admin extends democracy_engine {
                         add_settings_error($this->option_name,
                                 $this->hsc_utf8($name),
                                 $this->hsc_utf8("'" . $field['label'] . "' "
-                                        . __("must be an integer,", 'democracy-engine')
+                                        . __("must be an integer,", self::ID)
                                         . ' ' . $default));
                         continue 2;
                     }
