@@ -95,7 +95,7 @@ class Plugin {
     }
 
     public function render_donation_form() {
-        echo $this->templates->render('components/donationForm', [
+        return $this->templates->render('components/donationForm', [
             'donation_amounts' => array(    //TODO: Make this a plugin setting
                 5,
                 15,
