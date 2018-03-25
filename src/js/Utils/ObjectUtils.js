@@ -8,6 +8,16 @@ class ObjectUtils {
         }
         return ret.join("&");
     }
+
+    static ToFormData(obj) {
+        let formData = new FormData();
+
+        for (let key in obj) {
+            formData.append(key, obj[key]);
+        }
+
+        return formData;
+    }
 }
 
 export default ObjectUtils;

@@ -31,7 +31,8 @@ class Plugin {
         add_shortcode('democracy-engine-donation-form', array($this, 'render_donation_form'));
         
         //setup plugin ajax endpoints
-        add_action('wp_ajax_democracy_engine_donation_form', array($this, 'donation_form_ajax'));
+        add_action('wp_ajax_nopriv_donation_form_ajax', array($this, 'donation_form_ajax'));
+        add_action('wp_ajax_donation_form_ajax', array($this, 'donation_form_ajax'));
 
         //setup plugin scripts
         wp_register_style(self::ID, plugins_url('../assets/app.css',__FILE__ ));
@@ -78,7 +79,8 @@ class Plugin {
             $this->options['domain'],
             $this->options['username'],
             $this->options['password'],
-            $this->options['account_id']
+            $this->options['account_id'],
+            $this->options['recipient_id']
         );
     }
 
@@ -109,11 +111,15 @@ class Plugin {
     }
 
     public function donation_form_ajax() {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+
+        $postData = json_decode(file_get_contents('php://input'));
         $data = $this->client->createDonation();
 
         wp_send_json_success(array(
             "response" => $data,
-            "request" => array()
+            "request" => $postData
         ));
     }
 }

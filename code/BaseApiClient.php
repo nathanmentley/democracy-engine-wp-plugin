@@ -2,7 +2,7 @@
 
 namespace DEWordpressPlugin;
 
-class BaseApiClient {
+abstract class BaseApiClient {
     const GET = 'GET';
     const POST = 'POST';
     const PUT = 'PUT';
@@ -27,9 +27,7 @@ class BaseApiClient {
         return $this->exec(self::DELETE, $url, $obj);
     }
 
-    protected function setupAuth($curl) {
-        $curl;
-    }
+    abstract protected function setupAuth($curl);
 
     private function exec($method, $url, $obj = array()) {
         //TODO: I think the curl php extensions are required for wordpress, but I'll need to double check that before calling this good.
@@ -56,9 +54,11 @@ class BaseApiClient {
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-Type: application/json')); 
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HEADER, TRUE);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, TRUE);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($curl, CURLOPT_VERBOSE, TRUE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
 
-        $this->setupAuth($curl);
+        $curl = $this->setupAuth($curl);
 
         // Exec
         $response = curl_exec($curl);

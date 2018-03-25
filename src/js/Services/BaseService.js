@@ -18,15 +18,10 @@ class BaseService {
         return "";
     }
 
-    SendRequest(method, data = null) {
-        let postData = {
-            action: this.Action,
-            data: data
-        };
-
+    SendRequest(method, postData = null) {
         return new Promise((resolve, reject) => {
             let xhr = new XMLHttpRequest();
-            let url = this.Url;
+            let url = this.Url + "?action=" + this.Action;
 
             switch(method) {
                 case BaseService.GET:

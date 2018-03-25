@@ -24,14 +24,15 @@ class DEApiClient extends \DEWordpressPlugin\BaseApiClient {
     }
     
     protected function setupAuth($curl) {
-        $curl = parent::setupAuth($curl);
-
         curl_setopt($curl, CURLOPT_USERPWD, $this->username . ":" . $this->password);
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
+
+        return $curl;
     }
 
     public function createDonation() {
         return $this->post(
-            'https://' . $this->domain . '/subscriber/' . $this->account_id . '/donations.json',
+            'https://' . $this->domain . '/subscribers/' . $this->account_id . '/donations.json',
             array(
                 "donation" => array(
                     "line_items" => array(

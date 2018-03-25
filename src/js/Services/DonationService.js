@@ -6,7 +6,7 @@ class DonationService extends BaseService {
     }
     
     get Action() {
-        return "democracy_engine_donation_form";
+        return "donation_form_ajax";
     }
     
     createDonation() {
