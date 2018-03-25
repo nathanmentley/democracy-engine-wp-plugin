@@ -1,33 +1,76 @@
 import autobind from 'autobind-decorator';
 
+import BaseComponent from './BaseComponent';
+
 import DonationService from '../Services/DonationService';
 
-class DonationForm {
-    constructor() {}
+const rootClassName = ".democracy-engine-wp-plugin-donation-form-root";
+const submitButtonClassName = ".submit-button";
 
+class DonationForm extends BaseComponent {
+    constructor() {
+        super();
+    }
+
+    //setup jquery listeners
     @autobind
     setup() {
         let $ = this.getJquery();
 
-        $(".democracy-engine-wp-plugin-donation-form-root .submit-button")
+        $(rootClassName + " " + submitButtonClassName)
             .click(this.submit);
     }
 
     @autobind
-    getJquery() {
-        let $ = window.jQuery;
+    showAjaxWall() {
+        let $ = this.getJquery();
 
-        return $;
+
+    }
+
+    @autobind
+    hideAjaxWall() {
+        let $ = this.getJquery();
+
+
+    }
+
+    @autobind
+    showSuccessMessage(message) {
+        let $ = this.getJquery();
+
+        alert(message);
+    }
+
+    @autobind
+    showErrorMessage(message) {
+        let $ = this.getJquery();
+
+        alert(message);
     }
 
     @autobind
     submit(evt) {
-        DonationService.createDonation()
+        //get form data
+        let $ = this.getJquery();
+        let form = $(rootClassName);
+        let data = JSON.stringify(form.serializeArray());
+
+        //process ajax promise from our service.
+        this.showAjaxWall();
+        DonationService.createDonation(data)
             .then((x) => {
+                this.showSuccessMessage(x.data.message);
+            })
+            .catch((x) => {
                 console.log(x);
-                alert("donation");
+                this.showErrorMessage(x.data.data.message);
+            })
+            .finally(() => {
+                this.hideAjaxWall();
             });
 
+        //prevent default submit behavior
         evt.preventDefault();
         return false;
     }

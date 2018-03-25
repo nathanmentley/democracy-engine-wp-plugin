@@ -1,4 +1,5 @@
 class ObjectUtils {
+    //Warning, this flatens the object. so nested stuff won't behave as you might want.
     static BuildQueryString(obj) {
         let ret = [];
         for(let propertyName in obj) {
@@ -9,6 +10,7 @@ class ObjectUtils {
         return ret.join("&");
     }
 
+    //Warning. this flatens the objet. So nested stuff won't behave as you might want.
     static ToFormData(obj) {
         let formData = new FormData();
 

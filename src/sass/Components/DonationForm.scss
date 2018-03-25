@@ -1,2 +1,9 @@
 .democracy-engine-wp-plugin-donation-form-root {
+    input[type="text"], input[type="email"], input[type="tel"] {
+        width: 100%;
+    }
+
+    .democracy-engine-wp-plugin-legal-text {
+        font-size: 75%;
+    }
 }

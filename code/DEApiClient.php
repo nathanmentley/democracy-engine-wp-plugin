@@ -22,7 +22,7 @@ class DEApiClient extends \DEWordpressPlugin\BaseApiClient {
     public function __destruct() {
         parent::__destruct();
     }
-    
+
     protected function setupAuth($curl) {
         curl_setopt($curl, CURLOPT_USERPWD, $this->username . ":" . $this->password);
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
@@ -30,7 +30,7 @@ class DEApiClient extends \DEWordpressPlugin\BaseApiClient {
         return $curl;
     }
 
-    public function createDonation() {
+    public function createDonation($data) {
         return $this->post(
             'https://' . $this->domain . '/subscribers/' . $this->account_id . '/donations.json',
             array(
@@ -41,23 +41,34 @@ class DEApiClient extends \DEWordpressPlugin\BaseApiClient {
                             "recipient_id" => $this->recipient_id
                         )
                     ),
-                    "donor_last_name" => "Smith",
-                    "donor_first_name" => "John",
-                    "donor_zip" => "20001",
-                    "donor_address1" => "123 Main St.",
-                    "donor_city" => "My City",
-                    "donor_state" => "NY",
-                    "donor_email" => "name@example.com",
+                    "donor_first_name" => "Foo",
+                    "donor_last_name" => "Grits",
+                    "donor_company_name" => "",
+                    "donor_address1" => "452 Any St.",
+                    "donor_address2" => "",
+                    "donor_city" => "Wind Farm",
+                    "donor_state" => "AL",
+                    "donor_zip" => "34166",
+                    "donor_email" => "Khomas@pll.com",
+                    "donor_phone" => "",
+                    "cc_number" => "4111111111111111",
+                    "cc_verification_value" => "123",
+                    "cc_month" => 12,
+                    "cc_year" => 2019,
+                    "cc_first_name" => "Dan",
+                    "cc_last_name" => "Miller",
+                    "cc_zip" => "97035",
                     "compliance_employer" => "ACME employment",
                     "compliance_occupation" => "ACME occupation",
-                    "source_code" => "12345",
-                    "cc_first_name" => "John",
-                    "cc_last_name" => "Smith",
-                    "cc_number" => "4111111111111111",
-                    "cc_verification_value" => "111",
-                    "cc_zip" => "20001",
-                    "cc_month" => "08",
-                    "cc_year" => "2019",
+                    "compliance_employer_address1" => "Bradford Building, 14th Floor",
+                    "compliance_employer_address2" => "123 Main St",
+                    "compliance_employer_city" => "Town",
+                    "compliance_employer_state" => "IL",
+                    "compliance_employer_zip" => "0l337",
+                    "compliance_employer_country" => "US",
+                    "email_opt_in" => true,
+                    "is_corporate_contribution" => false,
+                    "source_code" => "SRCABC"
                 )
             )
         );

@@ -1,1 +1,7 @@
+//Since we want to make as few assumptions on the wordpress setup as possible
+// I'm using a super simple grid system. The classnames would be awful to use anywhere else.
+// but since it's limited to the scope of this simple plugin I guess that's okay?
+@import "Common/Grid";
+
+//Define all component specfic  styling.
 @import "Components/DonationForm";

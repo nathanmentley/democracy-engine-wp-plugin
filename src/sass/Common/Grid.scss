@@ -1,0 +1,109 @@
+//grid
+$width: 96%;
+$gutter: 4%;
+$breakpoint-small: 33.75em; // 540px
+$breakpoint-med: 45em; // 720px
+$breakpoint-large: 60em; // 960px
+
+// utility
+
+.democracy-engine-wp-plugin-left {
+    text-align: left;
+}
+
+.democracy-engine-wp-plugin-right {
+    text-align: right;
+}
+
+.democracy-engine-wp-plugin-center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.democracy-engine-wp-plugin-justify {
+    text-align: justify;
+}
+
+.democracy-engine-wp-plugin-hidden-sm {
+    display: none;
+}
+
+.democracy-engine-wp-plugin-container {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+
+    @media only screen and (min-width: $breakpoint-small) {
+        width: 80%;
+    }
+
+    @media only screen and (min-width: $breakpoint-large) {
+        width: 75%;
+        max-width: 60rem;
+    }
+}
+
+.democracy-engine-wp-plugin-row {
+    position: relative;
+    width: 100%;
+}
+
+.democracy-engine-wp-plugin-row [class^="democracy-engine-wp-plugin-col"] {
+    float: left;
+    margin: 0.5rem 2%;
+    min-height: 0.125rem;
+}
+
+.democracy-engine-wp-plugin-row::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.democracy-engine-wp-plugin-col-1,
+.democracy-engine-wp-plugin-col-2,
+.democracy-engine-wp-plugin-col-3,
+.democracy-engine-wp-plugin-col-4,
+.democracy-engine-wp-plugin-col-5,
+.democracy-engine-wp-plugin-col-6,
+.democracy-engine-wp-plugin-col-7,
+.democracy-engine-wp-plugin-col-8,
+.democracy-engine-wp-plugin-col-9,
+.democracy-engine-wp-plugin-col-10,
+.democracy-engine-wp-plugin-col-11,
+.democracy-engine-wp-plugin-col-12 {
+    width: $width;
+}
+
+.democracy-engine-wp-plugin-col-1-sm { width:($width / 12) - ($gutter * 11 / 12); }
+.democracy-engine-wp-plugin-col-2-sm { width: ($width / 6) - ($gutter * 10 / 12); }
+.democracy-engine-wp-plugin-col-3-sm { width: ($width / 4) - ($gutter * 9 / 12); }
+.democracy-engine-wp-plugin-col-4-sm { width: ($width / 3) - ($gutter * 8 / 12); }
+.democracy-engine-wp-plugin-col-5-sm { width: ($width / (12 / 5)) - ($gutter * 7 / 12); }
+.democracy-engine-wp-plugin-col-6-sm { width: ($width / 2) - ($gutter * 6 / 12); }
+.democracy-engine-wp-plugin-col-7-sm { width: ($width / (12 / 7)) - ($gutter * 5 / 12); }
+.democracy-engine-wp-plugin-col-8-sm { width: ($width / (12 / 8)) - ($gutter * 4 / 12); }
+.democracy-engine-wp-plugin-col-9-sm { width: ($width / (12 / 9)) - ($gutter * 3 / 12); }
+.democracy-engine-wp-plugin-col-10-sm { width: ($width / (12 / 10)) - ($gutter * 2 / 12); }
+.democracy-engine-wp-plugin-col-11-sm { width: ($width / (12 / 11)) - ($gutter * 1 / 12); }
+.democracy-engine-wp-plugin-col-12-sm { width: $width; }
+
+@media only screen and (min-width: $breakpoint-med) {
+    .democracy-engine-wp-plugin-col-1 { width:($width / 12) - ($gutter * 11 / 12); }
+    .democracy-engine-wp-plugin-col-2 { width: ($width / 6) - ($gutter * 10 / 12); }
+    .democracy-engine-wp-plugin-col-3 { width: ($width / 4) - ($gutter * 9 / 12); }
+    .democracy-engine-wp-plugin-col-4 { width: ($width / 3) - ($gutter * 8 / 12); }
+    .democracy-engine-wp-plugin-col-5 { width: ($width / (12 / 5)) - ($gutter * 7 / 12); }
+    .democracy-engine-wp-plugin-col-6 { width: ($width / 2) - ($gutter * 6 / 12); }
+    .democracy-engine-wp-plugin-col-7 { width: ($width / (12 / 7)) - ($gutter * 5 / 12); }
+    .democracy-engine-wp-plugin-col-8 { width: ($width / (12 / 8)) - ($gutter * 4 / 12); }
+    .democracy-engine-wp-plugin-col-9 { width: ($width / (12 / 9)) - ($gutter * 3 / 12); }
+    .democracy-engine-wp-plugin-col-10 { width: ($width / (12 / 10)) - ($gutter * 2 / 12); }
+    .democracy-engine-wp-plugin-col-11 { width: ($width / (12 / 11)) - ($gutter * 1 / 12); }
+    .democracy-engine-wp-plugin-col-12 { width: $width; }
+
+    .democracy-engine-wp-plugin-hidden-sm {
+        display: block;
+    }
+}

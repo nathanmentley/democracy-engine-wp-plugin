@@ -16,7 +16,9 @@ class Plugin {
         'username' => 'username',
         'password' => 'password',
         'account_id' => -1,
-        'recipient_id' => 'recipient'
+        'recipient_id' => 'recipient',
+        'unknown_error_message' => "Donation could not be processed. Please try again later.",
+        'success_message' => "Thank you for your donation."
     );
 
     protected $option_name;
@@ -111,15 +113,35 @@ class Plugin {
     }
 
     public function donation_form_ajax() {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-
         $postData = json_decode(file_get_contents('php://input'));
-        $data = $this->client->createDonation();
 
-        wp_send_json_success(array(
-            "response" => $data,
-            "request" => $postData
-        ));
+        try{
+            $data = $this->client->createDonation($postData);
+            //Is there any value in storing this data? In theory this is stored on
+            // DE's side, and honestly, I don't want to deal with storing this stuff
+            // safely?
+            
+            wp_send_json_success(
+                array(
+                    "message" => $this->options['success_message']
+                )
+            );
+        } catch (Exception $e) {
+            //ugly catch all, but since this is the highest level
+            // code... I don't feel bad. Let's catch whatever and
+            // report something generic to the user.
+
+            //log exception
+            error_log(
+                "Exception when trying the democracy engine api: " . $e->getMessage()
+            );
+            //send generic error
+            wp_send_json_error(
+                array(
+                    "message" => $this->options['unknown_error_message']
+                ),
+                500
+            );
+        }
     }
 }

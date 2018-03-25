@@ -45,8 +45,16 @@ class Admin extends \DEWordpressPlugin\Plugin {
     protected function set_sections() {
         $this->sections = array(
             'login' => array(
-                'title' => __("Democracy Engine Login Info", self::ID),
+                'title' => __("Login Info", self::ID),
                 'callback' => 'section_login',
+            ),
+            'messages' => array(
+                'title' => __("User Messages", self::ID),
+                'callback' => 'section_messages',
+            ),
+            'behavior' => array(
+                'title' => __("Plugin Behavior", self::ID),
+                'callback' => 'section_behavior',
             )
         );
     }
@@ -83,8 +91,20 @@ class Admin extends \DEWordpressPlugin\Plugin {
                 'text' => __("Democracy Engine Target Recipient ID", self::ID),
                 'type' => 'string',
             ),
+            'success_message' => array(
+                'section' => 'messages',
+                'label' => __("Successful Donation Message", self::ID),
+                'text' => __("This message displays when a user successfully donates", self::ID),
+                'type' => 'string',
+            ),
+            'unknown_error_message' => array( 
+                'section' => 'messages',
+                'label' => __("Unknown Error Message", self::ID),
+                'text' => __("This message displays when we encounter an unknown erorr", self::ID),
+                'type' => 'string',
+            ),
             'deactivate_deletes_data' => array(
-                'section' => 'login',
+                'section' => 'behavior',
                 'label' => __("Deactivation", self::ID),
                 'text' => __("Should deactivating the plugin remove all of the plugin data and settings?", self::ID),
                 'type' => 'bool',
@@ -156,7 +176,19 @@ class Admin extends \DEWordpressPlugin\Plugin {
 
     public function section_login() {
         echo $this->templates->render('admin/sectionHeader', [
-            'title' => $this->hsc_utf8(__("Democracy Engine API Login Info", self::ID))
+            'title' => $this->hsc_utf8(__("Democracy engine account login details", self::ID))
+        ]);
+    }
+
+    public function section_messages() {
+        echo $this->templates->render('admin/sectionHeader', [
+            'title' => $this->hsc_utf8(__("Custom messaging when users donates", self::ID))
+        ]);
+    }
+
+    public function section_behavior() {
+        echo $this->templates->render('admin/sectionHeader', [
+            'title' => $this->hsc_utf8(__("Define how you want the plugin to behave", self::ID))
         ]);
     }
 
