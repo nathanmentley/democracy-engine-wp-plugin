@@ -1,0 +1,17 @@
+matrix:
+  include:
+    - language: php
+      php: 7.0
+      script:
+        - composer install --no-interation
+    - language: node-js
+      node_js: 9
+      before_script:
+        - cd src
+        - npm install
+        - npm install -g gulp-cli
+      script:
+        - gulp
+notifications:
+  email:
+    - nathanmentley@gmail.com

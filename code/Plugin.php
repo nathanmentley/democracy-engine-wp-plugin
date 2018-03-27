@@ -117,10 +117,17 @@ class Plugin {
 
         try{
             $data = $this->client->createDonation($postData);
-            //Is there any value in storing this data? In theory this is stored on
+            //Is there any value in storing this response? In theory this is stored on
             // DE's side, and honestly, I don't want to deal with storing this stuff
             // safely?
-            
+            //
+            // But maybe it would be worth while storing like donation amount, whatever unique id
+            // DE gives us back... and stuff like that so the plugin can show cool values and analytical
+            // stuff in the future?
+            //
+            // This sounds like a future version kind of thing.
+            // TODO: Issue-8
+
             wp_send_json_success(
                 array(
                     "message" => $this->options['success_message']
