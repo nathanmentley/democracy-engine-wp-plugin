@@ -3,11 +3,12 @@ matrix:
     - language: php
       php: 7.0
       script:
+        - cd plugin
         - composer install --no-interaction
     - language: node-js
       node_js: 9
       before_script:
-        - cd src
+        - cd plugin/src
         - npm install
         - npm install -g gulp-cli
       script:

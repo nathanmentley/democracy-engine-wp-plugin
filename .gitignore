@@ -1,8 +1,8 @@
 *.swp
 .DS_Store
 
-src/node_modules
-vendor
+plugin/src/node_modules
+plugin/vendor
 
-assets/app.js
-assets/app.css
+plugin/assets/app.js
+plugin/assets/app.css
