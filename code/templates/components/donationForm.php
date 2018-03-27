@@ -5,7 +5,17 @@
     </div>
 </div>
 
+<div class="democracy-engine-wp-plugin-row democracy-engine-wp-plugin-success">
+    <div class="democracy-engine-wp-plugin-col-12 democracy-engine-wp-plugin-success-content">
+    </div>
+</div>
+
 <form class="democracy-engine-wp-plugin-donation-form-root democracy-engine-wp-plugin-container">
+    <div class="democracy-engine-wp-plugin-row democracy-engine-wp-plugin-failure">
+        <div class="democracy-engine-wp-plugin-col-12 democracy-engine-wp-plugin-failure-content">
+        </div>
+    </div>
+
     <div class="democracy-engine-wp-plugin-row">
         <div class="democracy-engine-wp-plugin-col-12">
             <h4 class="democracy-engine-wp-plugin-header-text">Amount</h4>

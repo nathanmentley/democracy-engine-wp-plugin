@@ -39,14 +39,17 @@ class DonationForm extends BaseComponent {
     showSuccessMessage(message) {
         let $ = this.getJquery();
 
-        alert(message);
+        $(".democracy-engine-wp-plugin-success .democracy-engine-wp-plugin-success-content").html(message);
+        $(".democracy-engine-wp-plugin-donation-form-root").hide();
+        $(".democracy-engine-wp-plugin-success").show();
     }
 
     @autobind
     showErrorMessage(message) {
         let $ = this.getJquery();
 
-        alert(message);
+        $(".democracy-engine-wp-plugin-failure .democracy-engine-wp-plugin-failure-content").html(message);
+        $(".democracy-engine-wp-plugin-failure").show();
     }
 
     @autobind
