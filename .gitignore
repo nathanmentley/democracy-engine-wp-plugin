@@ -1,2 +1,7 @@
 *.swp
+
 src/node_modules
+vendor
+
+assets/app.js
+assets/app.css
