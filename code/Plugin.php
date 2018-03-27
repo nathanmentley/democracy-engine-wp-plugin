@@ -12,7 +12,7 @@ class Plugin {
 
     protected $options_default = array(
         'deactivate_deletes_data' => 1,
-        'domain' => 'clientstage-api.democracyengine.com',
+        'domain' => 'clientstage-donate.democracyengine.com',
         'username' => 'username',
         'password' => 'password',
         'account_id' => -1,
@@ -113,10 +113,52 @@ class Plugin {
     }
 
     public function donation_form_ajax() {
-        $postData = json_decode(file_get_contents('php://input'));
+        $postData = json_decode(json_decode(file_get_contents('php://input')));
 
         try{
-            $data = $this->client->createDonation($postData);
+            $data = $this->client->createDonation(
+                array(
+                    "line_items" => array(
+                        array(
+                            "amount" => $this->getAmountFromDonationPost($postData),
+                            "recipient_id" => $this->options['recipient_id']
+                        )
+                    ),
+                    "donor_first_name" => $this->getValueFromPost($postData, "donation[first_name]"),
+                    "donor_last_name" => $this->getValueFromPost($postData, "donation[last_name]"),
+                    "donor_company_name" => $this->getValueFromPost($postData, ""),
+                    "donor_address1" => $this->getValueFromPost($postData, "donation[billing_address_attributes][address1]"),
+                    "donor_address2" => $this->getValueFromPost($postData, "donation[billing_address_attributes][address2]"),
+                    "donor_city" => $this->getValueFromPost($postData, "donation[billing_address_attributes][city]"),
+                    "donor_state" => $this->getValueFromPost($postData, "donation[billing_address_attributes][state]"),
+                    "donor_zip" => $this->getValueFromPost($postData, "donation[billing_address_attributes][zip]"),
+                    "donor_email" => $this->getValueFromPost($postData, "donation[email]"),
+                    "donor_phone" => $this->getValueFromPost($postData, "donation[billing_address_attributes][phone_number]"),
+                    "cc_number" => $this->getValueFromPost($postData, "donation[card_number]"),
+                    "cc_verification_value" => $this->getValueFromPost($postData, "donation[card_verification]"),
+                    "cc_month" => $this->getValueFromPost($postData, "donation[card_expires_on(2i)]"),
+                    "cc_year" => $this->getValueFromPost($postData, "donation[card_expires_on(1i)]"),
+
+                    "cc_first_name" => $this->getValueFromPost($postData, "donation[first_name]"), //taking this from the personal info? Normally one would want a seperate billing name. I'm assuming for donation like this, we'd probably want the person actually paying to match the person we're collecting data from... like to ensure donation limits and stuff? right?
+                    "cc_last_name" => $this->getValueFromPost($postData, "donation[last_name]"),
+                    "cc_zip" => $this->getValueFromPost($postData, "donation[billing_address_attributes][zip]"),
+
+                    "compliance_employer" => $this->getValueFromPost($postData, "donation[employer]"),
+                    "compliance_occupation" => $this->getValueFromPost($postData, "donation[occupation]"),
+
+                    // I'm not collecting this. However, Phase one doesn't support corporate donations. So, I'm guessing this is okay.
+                    "compliance_employer_address1" => $this->getValueFromPost($postData, ""),
+                    "compliance_employer_address2" => $this->getValueFromPost($postData, ""),
+                    "compliance_employer_city" => $this->getValueFromPost($postData, ""),
+                    "compliance_employer_state" => $this->getValueFromPost($postData, ""),
+                    "compliance_employer_zip" => $this->getValueFromPost($postData, ""),
+                    "compliance_employer_country" => $this->getValueFromPost($postData, ""),
+
+                    "email_opt_in" => true,
+                    "is_corporate_contribution" => false,
+                    "source_code" => "SRCABC"
+                )
+            );
             //Is there any value in storing this response? In theory this is stored on
             // DE's side, and honestly, I don't want to deal with storing this stuff
             // safely?
@@ -150,5 +192,32 @@ class Plugin {
                 500
             );
         }
+    }
+
+    private function getAmountFromDonationPost($postData) {
+        $amount = $this->getValueFromPost($postData, "donation[amount]");
+
+        if($amount === "") {
+            return $this->getValueFromPost($postData, "donation[amount_option]");
+        }
+
+        return $amount;
+    }
+
+    private function getValueFromPost($postData, $key) {
+        if ($key) {
+            if($postData) {
+                foreach($postData as $pair) {
+                    if($pair->name == $key) {
+                        return $pair->value;
+                    }
+                }
+            } else {
+                //TODO: throw custom exception
+            }
+
+        }
+
+        return "";
     }
 }
