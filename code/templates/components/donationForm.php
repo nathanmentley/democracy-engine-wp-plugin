@@ -1,3 +1,10 @@
+<div class="democracy-engine-wp-plugin-ajax-wall">
+    <div class="democracy-engine-wp-plugin-ajax-wall-back">
+    </div>
+    <div class="democracy-engine-wp-plugin-spinner">
+    </div>
+</div>
+
 <form class="democracy-engine-wp-plugin-donation-form-root democracy-engine-wp-plugin-container">
     <div class="democracy-engine-wp-plugin-row">
         <div class="democracy-engine-wp-plugin-col-12">

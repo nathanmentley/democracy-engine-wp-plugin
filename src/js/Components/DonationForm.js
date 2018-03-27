@@ -25,14 +25,14 @@ class DonationForm extends BaseComponent {
     showAjaxWall() {
         let $ = this.getJquery();
 
-
+        $(".democracy-engine-wp-plugin-ajax-wall").show();
     }
 
     @autobind
     hideAjaxWall() {
         let $ = this.getJquery();
 
-
+        $(".democracy-engine-wp-plugin-ajax-wall").hide();
     }
 
     @autobind
