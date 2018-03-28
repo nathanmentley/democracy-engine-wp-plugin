@@ -129,6 +129,7 @@ class Plugin {
                     "donor_company_name" => $this->getValueFromPost($postData, ""),
                     "donor_address1" => $this->getValueFromPost($postData, "donation[billing_address_attributes][address1]"),
                     "donor_address2" => $this->getValueFromPost($postData, "donation[billing_address_attributes][address2]"),
+                    "donor_address3" => $this->getValueFromPost($postData, "donation[billing_address_attributes][address3]"),
                     "donor_city" => $this->getValueFromPost($postData, "donation[billing_address_attributes][city]"),
                     "donor_state" => $this->getValueFromPost($postData, "donation[billing_address_attributes][state]"),
                     "donor_zip" => $this->getValueFromPost($postData, "donation[billing_address_attributes][zip]"),

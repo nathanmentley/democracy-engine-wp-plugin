@@ -67,7 +67,7 @@
         <div class="democracy-engine-wp-plugin-col-12">
             <input class="text" id="donation_billing_address_address2" name="donation[billing_address_attributes][address2]" placeholder="Address 2" type="text">
         </div>
-        <div class="democracy-engine-wp-plugin-col-12">
+        <div class="democracy-engine-wp-plugin-col-12 not-us-or-canada">
             <input class="text not-us-or-canada hide" id="donation_billing_address_address3" name="donation[billing_address_attributes][address3]" placeholder="Address 3" type="text">
         </div>
     </div>
@@ -145,8 +145,7 @@
         </div>
     </div>
     <div class="democracy-engine-wp-plugin-row">
-        <div class="democracy-engine-wp-plugin-col-12">
-            <label for="donation_card_expires_on">Expires</label>
+        <div class="democracy-engine-wp-plugin-col-6">
             <select id="donation_card_expires_on_1i" name="donation[card_expires_on(1i)]">
                 <?php foreach($years as $intValue): ?>
                     <option value="<?=$this->e($intValue)?>">
@@ -154,6 +153,8 @@
                     </option>
                 <?php endforeach; ?>
             </select>
+        </div>
+        <div class="democracy-engine-wp-plugin-col-6">
             <select id="donation_card_expires_on_2i" name="donation[card_expires_on(2i)]">
                 <?php foreach($months as $intValue => $name): ?>
                     <option value="<?=$this->e($intValue)?>">

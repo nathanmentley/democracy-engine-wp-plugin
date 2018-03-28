@@ -4,7 +4,12 @@ import BaseComponent from './BaseComponent';
 
 import DonationService from '../Services/DonationService';
 
+//TODO: To support more than one donation form per page. We'll want to be passing in
+// a jquery instance of the root form. Instead of just filtering each jquery selector
+// on this class name.
 const rootClassName = ".democracy-engine-wp-plugin-donation-form-root";
+
+//TODO: cleanup. Move all selectors to be private consts here instead of magic strings below
 const submitButtonClassName = ".submit-button";
 
 class DonationForm extends BaseComponent {
@@ -19,6 +24,9 @@ class DonationForm extends BaseComponent {
 
         $(rootClassName + " " + submitButtonClassName)
             .click(this.submit);
+
+        $(rootClassName + " " + "#donation_billing_address_country_code")
+            .change(this.changeCountry).change();
     }
 
     @autobind
@@ -76,6 +84,27 @@ class DonationForm extends BaseComponent {
         //prevent default submit behavior
         evt.preventDefault();
         return false;
+    }
+
+    @autobind
+    changeCountry(evt) {
+        let $ = this.getJquery();
+
+        if($(evt.target).val() === "US" || $(evt.target).val() === "CA") {
+            $(rootClassName + " " + ".not-us-or-canada").hide();
+            $(rootClassName + " " + ".us-or-canada").show();
+            
+            if($(evt.target).val() === "US") {
+                $(rootClassName + " " + ".us-only").show();
+                $(rootClassName + " " + ".canada-only").hide();
+            } else {
+                $(rootClassName + " " + ".us-only").hide();
+                $(rootClassName + " " + ".canada-only").show();
+            }
+        } else {
+            $(rootClassName + " " + ".not-us-or-canada").show();
+            $(rootClassName + " " + ".us-or-canada").hide();
+        }
     }
 }
 
