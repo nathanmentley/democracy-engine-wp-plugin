@@ -76,7 +76,7 @@
             <input class="text" id="donation_billing_address_city" name="donation[billing_address_attributes][city]" placeholder="City" type="text">
         </div>
         <div class="democracy-engine-wp-plugin-col-4 us-or-canada us-only hide" style="display: block;">
-            <select id="donation_billing_address_state" name="donation[billing_address_attributes][state]">
+            <select id="donation_billing_address_state" name="donation[billing_address_attributes][state_us]">
                 <?php foreach($us_states as $code => $name): ?>
                     <option value="<?=$this->e($code)?>">
                         <?=$this->e($name)?>
@@ -85,7 +85,7 @@
             </select>
         </div>
         <div class="democracy-engine-wp-plugin-col-4 us-or-canada canada-only hide" style="display: none;">
-            <input class="text" disabled="disabled" id="donation_billing_address_state" name="donation[billing_address_attributes][state]" placeholder="State" type="text">
+            <input class="text" id="donation_billing_address_state" name="donation[billing_address_attributes][state_ca]" placeholder="State" type="text">
         </div>
         <div class="democracy-engine-wp-plugin-col-4">
             <input class="text" id="donation_billing_address_zip" name="donation[billing_address_attributes][zip]" placeholder="Postal code" type="text">
@@ -101,7 +101,7 @@
     </div>
     <div class="democracy-engine-wp-plugin-row">
         <div class="democracy-engine-wp-plugin-col-12">
-            <label class="checkbox" for="donation_email_opt_in"><input name="donation[email_opt_in]" type="hidden" value="0"><input checked="checked" id="donation_email_opt_in" name="donation[email_opt_in]" type="checkbox" value="1"> Send email updates</label>
+            <label class="checkbox" for="donation_email_opt_in"><input checked="checked" id="donation_email_opt_in" name="donation[email_opt_in]" type="checkbox" value="1"> Send email updates</label>
         </div>
     </div>
     
@@ -162,7 +162,6 @@
                     </option>
                 <?php endforeach; ?>
             </select>
-            <input id="donation_card_expires_on_3i" name="donation[card_expires_on(3i)]" type="hidden" value="1">
         </div>
     </div>
     <div class="democracy-engine-wp-plugin-row">
@@ -179,16 +178,16 @@
         </div>   
         <div class="democracy-engine-wp-plugin-col-12">
             <label class="checkbox padtopless" for="donation_is_confirmed">
-                <input name="donation[is_confirmed]" type="hidden" value="0"><input class="checkbox" id="donation_is_confirmed" name="donation[is_confirmed]" type="checkbox" value="1"/> I confirm that the above statements are true and accurate.
+                <input class="checkbox" id="donation_is_confirmed" name="donation[is_confirmed]" type="checkbox" value="1"/> I confirm that the above statements are true and accurate.
             </label>
         </div>
         <div class="democracy-engine-wp-plugin-col-12">
             <label class="checkbox" for="donation_is_de_confirmed">
-                <input name="donation[is_de_confirmed]" type="hidden" value="0"><input class="checkbox" id="donation_is_de_confirmed" name="donation[is_de_confirmed]" type="checkbox" value="1"/> I agree to the Democracy Engine <a href="http://www.democracyengine.com/subscriber_tos" target="_new">Terms of Service</a> and <a href="http://www.democracyengine.com/subscriber_privacy_policy" target="_new">Privacy Policy</a>. You will not receive any emails from them, they just deliver your donation to us.
+                <input class="checkbox" id="donation_is_de_confirmed" name="donation[is_de_confirmed]" type="checkbox" value="1"/> I agree to the Democracy Engine <a href="http://www.democracyengine.com/subscriber_tos" target="_new">Terms of Service</a> and <a href="http://www.democracyengine.com/subscriber_privacy_policy" target="_new">Privacy Policy</a>. You will not receive any emails from them, they just deliver your donation to us.
             </label>
         </div>
         <div class="democracy-engine-wp-plugin-col-12">
-            <label class="checkbox" for="donation_is_private"><input name="donation[is_private]" type="hidden" value="0">
+            <label class="checkbox" for="donation_is_private">
                 <input class="checkbox" id="donation_is_private" name="donation[is_private]" type="checkbox" value="1" /> Don't publish my donation on the website.
             </label>
         </div>

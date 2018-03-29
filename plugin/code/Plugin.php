@@ -116,6 +116,14 @@ class Plugin {
         $postData = json_decode(json_decode(file_get_contents('php://input')));
 
         try{
+            $country = $this->getValueFromPost($postData, "donation[billing_address_attributes][country_code]");
+            $state = "";
+            if($country == "US") {
+                $state = $this->getValueFromPost($postData, "donation[billing_address_attributes][state_us]");
+            } else if ($country == "CA") {
+                $state = $this->getValueFromPost($postData, "donation[billing_address_attributes][state_ca]");
+            }
+
             $data = $this->client->createDonation(
                 array(
                     "line_items" => array(
@@ -127,11 +135,11 @@ class Plugin {
                     "donor_first_name" => $this->getValueFromPost($postData, "donation[first_name]"),
                     "donor_last_name" => $this->getValueFromPost($postData, "donation[last_name]"),
                     "donor_company_name" => $this->getValueFromPost($postData, ""),
+                    "donor_country_code"=> $country,
                     "donor_address1" => $this->getValueFromPost($postData, "donation[billing_address_attributes][address1]"),
                     "donor_address2" => $this->getValueFromPost($postData, "donation[billing_address_attributes][address2]"),
-                    "donor_address3" => $this->getValueFromPost($postData, "donation[billing_address_attributes][address3]"),
                     "donor_city" => $this->getValueFromPost($postData, "donation[billing_address_attributes][city]"),
-                    "donor_state" => $this->getValueFromPost($postData, "donation[billing_address_attributes][state]"),
+                    "donor_state" => $state,
                     "donor_zip" => $this->getValueFromPost($postData, "donation[billing_address_attributes][zip]"),
                     "donor_email" => $this->getValueFromPost($postData, "donation[email]"),
                     "donor_phone" => $this->getValueFromPost($postData, "donation[billing_address_attributes][phone_number]"),
@@ -155,11 +163,12 @@ class Plugin {
                     "compliance_employer_zip" => $this->getValueFromPost($postData, ""),
                     "compliance_employer_country" => $this->getValueFromPost($postData, ""),
 
-                    "email_opt_in" => true,
+                    "email_opt_in" => $this->getValueFromPost($postData, "donation[email_opt_in]") == "1",
                     "is_corporate_contribution" => false,
                     "source_code" => "SRCABC"
                 )
             );
+
             //Is there any value in storing this response? In theory this is stored on
             // DE's side, and honestly, I don't want to deal with storing this stuff
             // safely?
@@ -171,11 +180,20 @@ class Plugin {
             // This sounds like a future version kind of thing.
             // TODO: Issue-8
 
-            wp_send_json_success(
-                array(
-                    "message" => $this->options['success_message']
-                )
-            );
+            if(isset($data["data"]->gid)) {
+                wp_send_json_success(
+                    array(
+                        "message" => $this->options['success_message']
+                    )
+                );
+            } else {
+                wp_send_json_error(
+                    array(
+                        "message" => $this->options['unknown_error_message']
+                    ),
+                    500
+                );
+            }
         } catch (Exception $e) {
             //ugly catch all, but since this is the highest level
             // code... I don't feel bad. Let's catch whatever and

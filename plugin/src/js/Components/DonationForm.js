@@ -1,4 +1,5 @@
 import autobind from 'autobind-decorator';
+import validator from 'validator';
 
 import BaseComponent from './BaseComponent';
 
@@ -56,34 +57,133 @@ class DonationForm extends BaseComponent {
     showErrorMessage(message) {
         let $ = this.getJquery();
 
+        /*
         $(".democracy-engine-wp-plugin-failure .democracy-engine-wp-plugin-failure-content").html(message);
         $(".democracy-engine-wp-plugin-failure").show();
+        */
+
+        alert(message);
     }
 
     @autobind
     submit(evt) {
+        evt.preventDefault();
+        
         //get form data
         let $ = this.getJquery();
         let form = $(rootClassName);
-        let data = JSON.stringify(form.serializeArray());
-
-        //process ajax promise from our service.
-        this.showAjaxWall();
-        DonationService.createDonation(data)
-            .then((x) => {
-                this.showSuccessMessage(x.data.message);
-            })
-            .catch((x) => {
-                console.log(x);
-                this.showErrorMessage(x.data.data.message);
-            })
-            .finally(() => {
-                this.hideAjaxWall();
-            });
-
-        //prevent default submit behavior
-        evt.preventDefault();
+        let data = form.serializeArray();
+        let dataStr = JSON.stringify(data);
+        
+        if(this.validate(data)) {
+            //process ajax promise from our service.
+            this.showAjaxWall();
+            DonationService.createDonation(dataStr)
+                .then((x) => {
+                    this.showSuccessMessage(x.data.message);
+                })
+                .catch((x) => {
+                    this.showErrorMessage(x.data.data.message);
+                })
+                .finally(() => {
+                    this.hideAjaxWall();
+                });
+        }
+        
+        //prevent non js form submit
         return false;
+    }
+
+    @autobind
+    validate(data) {
+        let $ = this.getJquery();
+
+        let amount1 = this.getValue(data, "donation[amount_option]");
+        let amount2 = this.getValue(data, "donation[amount]");
+        if(!amount1 && !amount2) {
+            alert("Please select a valid amount.");
+            return false;
+        }
+        if(amount1 && !validator.isCurrency(amount1)) {
+            alert("Please select a valid amount.");
+            return false;
+        }
+        if(amount2 && !validator.isCurrency(amount2)) {
+            alert("Please select a valid amount.");
+            return false;
+        }
+
+        if(!this.enforceRequiredField(data, "donation[first_name]", "First Name")) { return false; }
+        if(!this.enforceRequiredField(data, "donation[last_name]", "Last Name")) { return false; }
+        if(!this.enforceRequiredField(data, "donation[billing_address_attributes][address1]", "Adddress 1")) { return false; }
+        if(!this.enforceRequiredField(data, "donation[billing_address_attributes][city]", "City")) { return false; }
+        if(!this.enforceRequiredField(data, "donation[email]", "Email")) { return false; }
+        if(!this.enforceRequiredField(data, "donation[billing_address_attributes][phone_number]", "Phone")) { return false; }
+        if(!this.enforceRequiredField(data, "donation[card_number]", "Credit Card Number")) { return false; }
+        if(!this.enforceRequiredField(data, "donation[card_verification]", "Credit Card Security Code")) { return false; }
+        if(!this.enforceRequiredField(data, "donation[card_expires_on(1i)]", "Expiration Year")) { return false; }
+        if(!this.enforceRequiredField(data, "donation[card_expires_on(2i)]", "Expiration Month")) { return false; }
+        if(!this.enforceRequiredField(data, "donation[employer]", "Employer")) { return false; }
+        if(!this.enforceRequiredField(data, "donation[occupation]", "Ocupation")) { return false; }
+        
+        let countryCode = this.getValue(data, "donation[billing_address_attributes][country_code]");
+        if(countryCode == 'US' || countryCode == 'CA') {
+            if(!this.enforceFieldFormat(data, "donation[billing_address_attributes][zip]", "Postal Code", (x) => validator.isPostalCode(x, 'any'))) { return false; }
+            if(countryCode == 'CA') {
+                if(!this.enforceRequiredField(data, "donation[billing_address_attributes][state_ca]", "State")) { return false; }
+            }
+        }
+
+        if(!this.enforceFieldFormat(data, "donation[email]", "Email", validator.isEmail)) { return false; }
+        if(!this.enforceFieldFormat(data, "donation[billing_address_attributes][phone_number]", "Phone", (x) => validator.isMobilePhone(x, 'any'))) { return false; }
+        if(!this.enforceFieldFormat(data, "donation[card_number]", "Credit Card Number", validator.isCreditCard)) { return false; }
+        if(!this.enforceFieldFormat(data, "donation[card_verification]", "Credit Card Security Code", validator.isNumeric)) { return false; }
+
+        if($('#donation_is_confirmed:checked').length == 0) {
+            alert("Please confirm the data is accurate.");
+            return false;
+        }
+        if($('#donation_is_de_confirmed:checked').length == 0) {
+            alert("Please confirm the democracy engine terms of service.");
+            return false;
+        }
+
+        return true;
+    }
+
+    @autobind
+    enforceRequiredField(data, key, title) {
+        let value = this.getValue(data, key);
+        if(!value) {
+            alert(title + " is required.");
+            return false;
+        }
+
+        return true;
+    }
+
+    @autobind
+    enforceFieldFormat(data, key, title, logic) {
+        let value = this.getValue(data, key);
+        if(!logic(value)) {
+            alert(title + " is invalid.");
+            return false;
+        }
+
+        return true;
+    }
+
+    @autobind
+    getValue(data, key) {
+        if(data) {
+            let record = data.find((x) => x.name === key);
+
+            if(record) {
+                return record.value;
+            }
+        }
+
+        return "";
     }
 
     @autobind
